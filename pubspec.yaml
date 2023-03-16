@@ -1,6 +1,6 @@
 name: suggestion_input_field
-description: This is a suggestion text field
-version: 0.0.1
+description: Suggestion_input_field is a Flutter package that provides a customizable input field with suggestions for faster and more accurate user input. It is ideal for forms, search bars, and any other input scenarios where suggestions can enhance the user experience.
+version: 0.0.2
 homepage: https://github.com/ChegzDev/suggestion_input_field
 repository: https://github.com/ChegzDev/suggestion_input_field
 

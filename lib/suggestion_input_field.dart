@@ -22,17 +22,17 @@ class TextFieldContent {
 
   TextFieldContent(
       {this.onChanged,
-        this.onSaved,
-        this.focusNode,
-        this.label,
-        this.onEditingComplete,
-        this.inputFormatters,
-        this.textInputAction,
-        this.validator,
-        this.maxLines = 1,
-        this.keyboardType,
-        this.autoValidateMode,
-        this.onFieldSubmitted});
+      this.onSaved,
+      this.focusNode,
+      this.label,
+      this.onEditingComplete,
+      this.inputFormatters,
+      this.textInputAction,
+      this.validator,
+      this.maxLines = 1,
+      this.keyboardType,
+      this.autoValidateMode,
+      this.onFieldSubmitted});
 }
 
 class SuggestionTextField<T extends Object> extends StatelessWidget {
@@ -63,26 +63,25 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   /// );
   SuggestionTextField(
       {super.key,
-        required this.suggestionFetch,
-        this.displayStringForOption = RawSuggestionField.defaultStringForOption,
-        this.onSelected,
-        this.optionsMaxHeight = 200.0,
-        this.optionsMaxWidth = 300.0,
-        this.itemBuilder,
-        this.value,
-        this.textFieldContent,
-        this.readOnly = false,
-        this.firstSuggestionFocus=true,
-        this.onClose
-      });
+      required this.suggestionFetch,
+      this.displayStringForOption = RawSuggestionField.defaultStringForOption,
+      this.onSelected,
+      this.optionsMaxHeight = 200.0,
+      this.optionsMaxWidth = 300.0,
+      this.itemBuilder,
+      this.value,
+      this.textFieldContent,
+      this.readOnly = false,
+      this.firstSuggestionFocus = true,
+      this.onClose});
 
   final bool readOnly;
 
   final bool firstSuggestionFocus;
 
   final Widget Function(
-      T item,
-      )? itemBuilder;
+    T item,
+  )? itemBuilder;
   final AutocompleteOptionToString<T> displayStringForOption;
   final T? value;
 
@@ -102,13 +101,13 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   final double optionsMaxWidth;
 
   /// {@macro flutter.widgets.RawAutocomplete.initialValue}
-  final TextEditingController controller= TextEditingController();
-  final FocusNode focusNode= FocusNode();
+  final TextEditingController controller = TextEditingController();
+  final FocusNode focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if(value!=null){
-        controller.text= displayStringForOption(value!);
+      if (value != null) {
+        controller.text = displayStringForOption(value!);
       }
     });
     return RawSuggestionField<T>(
@@ -131,7 +130,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
           textInputAction: textFieldContent?.textInputAction,
           keyboardType: textFieldContent?.keyboardType,
           onChanged: (value) {
-            if(textFieldContent?.onChanged!=null){
+            if (textFieldContent?.onChanged != null) {
               textFieldContent!.onChanged!(value);
             }
           },
@@ -142,12 +141,20 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
           decoration: InputDecoration(
               labelText: textFieldContent?.label,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: onClose!=null?InkWell(onTap:  onClose, child: const Icon(Icons.close,size: 20,),):null,
+              suffixIcon: onClose != null
+                  ? InkWell(
+                      onTap: onClose,
+                      child: const Icon(
+                        Icons.close,
+                        size: 20,
+                      ),
+                    )
+                  : null,
               isDense: true,
               floatingLabelAlignment: FloatingLabelAlignment.start),
         );
       },
-      optionsBuilder: (textEditingValue) async{
+      optionsBuilder: (textEditingValue) async {
         final d = await suggestionFetch(textEditingValue);
         return d;
       },
@@ -219,7 +226,7 @@ class _Suggestions<T extends Object> extends StatelessWidget {
                   return Container(
                     color: highlight ? Theme.of(context).focusColor : null,
                     padding:
-                    itemBuilder == null ? const EdgeInsets.all(16.0) : null,
+                        itemBuilder == null ? const EdgeInsets.all(16.0) : null,
                     child: itemBuilder == null
                         ? Text(displayStringForOption(option))
                         : itemBuilder!(option),
@@ -233,6 +240,7 @@ class _Suggestions<T extends Object> extends StatelessWidget {
     );
   }
 }
+
 class RawSuggestionField<T extends Object> extends StatefulWidget {
   /// Create an instance of RawAutocomplete.
   ///
@@ -247,17 +255,19 @@ class RawSuggestionField<T extends Object> extends StatefulWidget {
     this.focusNode,
     this.onSelected,
     this.textEditingController,
-    this.firstSuggestionFocus=true,
+    this.firstSuggestionFocus = true,
     this.initialValue,
-  }) : assert(
-  fieldViewBuilder != null
-      || (key != null && focusNode != null && textEditingController != null),
-  'Pass in a fieldViewBuilder, or otherwise create a separate field and pass in the FocusNode, TextEditingController, and a key. Use the key with RawAutocomplete.onFieldSubmitted.',
-  ),
+  })  : assert(
+          fieldViewBuilder != null ||
+              (key != null &&
+                  focusNode != null &&
+                  textEditingController != null),
+          'Pass in a fieldViewBuilder, or otherwise create a separate field and pass in the FocusNode, TextEditingController, and a key. Use the key with RawAutocomplete.onFieldSubmitted.',
+        ),
         assert((focusNode == null) == (textEditingController == null)),
         assert(
-        !(textEditingController != null && initialValue != null),
-        'textEditingController and initialValue cannot be simultaneously defined.',
+          !(textEditingController != null && initialValue != null),
+          'textEditingController and initialValue cannot be simultaneously defined.',
         );
 
   /// {@template flutter.widgets.RawAutocomplete.fieldViewBuilder}
@@ -370,7 +380,8 @@ class RawSuggestionField<T extends Object> extends StatefulWidget {
   ///  * [focusNode] and [textEditingController], which contain a code example
   ///    showing how to create a separate field outside of fieldViewBuilder.
   static void onFieldSubmitted<T extends Object>(GlobalKey key) {
-    final _RawSuggestionFieldState<T> rawAutocomplete = key.currentState! as _RawSuggestionFieldState<T>;
+    final _RawSuggestionFieldState<T> rawAutocomplete =
+        key.currentState! as _RawSuggestionFieldState<T>;
     rawAutocomplete._onFieldSubmitted();
   }
 
@@ -386,14 +397,17 @@ class RawSuggestionField<T extends Object> extends StatefulWidget {
   State<RawSuggestionField<T>> createState() => _RawSuggestionFieldState<T>();
 }
 
-class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionField<T>> {
+class _RawSuggestionFieldState<T extends Object>
+    extends State<RawSuggestionField<T>> {
   final GlobalKey _fieldKey = GlobalKey();
   final LayerLink _optionsLayerLink = LayerLink();
   late TextEditingController _textEditingController;
   late FocusNode _focusNode;
   late final Map<Type, Action<Intent>> _actionMap;
-  late final _SuggestionCallbackAction<AutocompletePreviousOptionIntent> _previousOptionAction;
-  late final _SuggestionCallbackAction<AutocompleteNextOptionIntent> _nextOptionAction;
+  late final _SuggestionCallbackAction<AutocompletePreviousOptionIntent>
+      _previousOptionAction;
+  late final _SuggestionCallbackAction<AutocompleteNextOptionIntent>
+      _nextOptionAction;
   late final _SuggestionCallbackAction<DismissIntent> _hideOptionsAction;
   Iterable<T> _options = Iterable<T>.empty();
   T? _selection;
@@ -401,9 +415,12 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
   String _lastFieldText = '';
   final ValueNotifier<int> _highlightedOptionIndex = ValueNotifier<int>(0);
 
-  static const Map<ShortcutActivator, Intent> _shortcuts = <ShortcutActivator, Intent>{
-    SingleActivator(LogicalKeyboardKey.arrowUp): AutocompletePreviousOptionIntent(),
-    SingleActivator(LogicalKeyboardKey.arrowDown): AutocompleteNextOptionIntent(),
+  static const Map<ShortcutActivator, Intent> _shortcuts =
+      <ShortcutActivator, Intent>{
+    SingleActivator(LogicalKeyboardKey.arrowUp):
+        AutocompletePreviousOptionIntent(),
+    SingleActivator(LogicalKeyboardKey.arrowDown):
+        AutocompleteNextOptionIntent(),
   };
 
   // The OverlayEntry containing the options.
@@ -411,7 +428,10 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
 
   // True iff the state indicates that the options should be visible.
   bool get _shouldShowOptions {
-    return !_userHidOptions && _focusNode.hasFocus && _selection == null && _options.isNotEmpty;
+    return !_userHidOptions &&
+        _focusNode.hasFocus &&
+        _selection == null &&
+        _options.isNotEmpty;
   }
 
   // Called when _textEditingController changes.
@@ -421,14 +441,14 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
       value,
     );
     _options = options;
-    if(widget.firstSuggestionFocus){
+    if (widget.firstSuggestionFocus) {
       _updateHighlight(_highlightedOptionIndex.value);
-    }else{
-      _highlightedOptionIndex.value=-1;
+    } else {
+      _highlightedOptionIndex.value = -1;
     }
     //
-    if (_selection != null
-        && value.text != widget.displayStringForOption(_selection!)) {
+    if (_selection != null &&
+        value.text != widget.displayStringForOption(_selection!)) {
       _selection = null;
     }
 
@@ -455,10 +475,9 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
     if (_options.isEmpty || _userHidOptions) {
       return;
     }
-    if(_highlightedOptionIndex.value!=-1){
+    if (_highlightedOptionIndex.value != -1) {
       _select(_options.elementAt(_highlightedOptionIndex.value));
     }
-
   }
 
   // Select the given option and update the widget.
@@ -478,7 +497,8 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
   }
 
   void _updateHighlight(int newIndex) {
-    _highlightedOptionIndex.value = _options.isEmpty ? 0 : newIndex % _options.length;
+    _highlightedOptionIndex.value =
+        _options.isEmpty ? 0 : newIndex % _options.length;
   }
 
   void _highlightPreviousOption(AutocompletePreviousOptionIntent intent) {
@@ -488,12 +508,11 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
       _updateOverlay();
       return;
     }
-    if(_highlightedOptionIndex.value==0){
-      _highlightedOptionIndex.value=-1;
-    }else{
+    if (_highlightedOptionIndex.value == 0) {
+      _highlightedOptionIndex.value = -1;
+    } else {
       _updateHighlight(_highlightedOptionIndex.value - 1);
     }
-
   }
 
   void _highlightNextOption(AutocompleteNextOptionIntent intent) {
@@ -527,13 +546,15 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
   }
 
   void _updateActions() {
-    _setActionsEnabled(_focusNode.hasFocus && _selection == null && _options.isNotEmpty);
+    _setActionsEnabled(
+        _focusNode.hasFocus && _selection == null && _options.isNotEmpty);
   }
 
   bool _floatingOptionsUpdateScheduled = false;
   // Hide or show the options overlay, if needed.
   void _updateOverlay() {
-    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
       if (!_floatingOptionsUpdateScheduled) {
         _floatingOptionsUpdateScheduled = true;
         SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
@@ -555,17 +576,16 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
             child: TextFieldTapRegion(
               child: AutocompleteHighlightedOption(
                   highlightIndexNotifier: _highlightedOptionIndex,
-                  child: Builder(
-                      builder: (BuildContext context) {
-                        return widget.optionsViewBuilder(context, _select, _options);
-                      }
-                  )
-              ),
+                  child: Builder(builder: (BuildContext context) {
+                    return widget.optionsViewBuilder(
+                        context, _select, _options);
+                  })),
             ),
           );
         },
       );
-      Overlay.of(context, rootOverlay: true, debugRequiredFor: widget).insert(newFloatingOptions);
+      Overlay.of(context, rootOverlay: true, debugRequiredFor: widget)
+          .insert(newFloatingOptions);
       _floatingOptions = newFloatingOptions;
     } else {
       _floatingOptions = null;
@@ -574,7 +594,8 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
 
   // Handle a potential change in textEditingController by properly disposing of
   // the old one and setting up the new one, if needed.
-  void _updateTextEditingController(TextEditingController? old, TextEditingController? current) {
+  void _updateTextEditingController(
+      TextEditingController? old, TextEditingController? current) {
     if ((old == null && current == null) || old == current) {
       return;
     }
@@ -616,14 +637,19 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
   @override
   void initState() {
     super.initState();
-    _textEditingController = widget.textEditingController ?? TextEditingController.fromValue(widget.initialValue);
+    _textEditingController = widget.textEditingController ??
+        TextEditingController.fromValue(widget.initialValue);
     _textEditingController.addListener(_onChangedField);
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onChangedFocus);
-    _previousOptionAction = _SuggestionCallbackAction<AutocompletePreviousOptionIntent>(onInvoke: _highlightPreviousOption);
-    _nextOptionAction = _SuggestionCallbackAction<AutocompleteNextOptionIntent>(onInvoke: _highlightNextOption);
-    _hideOptionsAction = _SuggestionCallbackAction<DismissIntent>(onInvoke: _hideOptions);
-    _actionMap = <Type, Action<Intent>> {
+    _previousOptionAction =
+        _SuggestionCallbackAction<AutocompletePreviousOptionIntent>(
+            onInvoke: _highlightPreviousOption);
+    _nextOptionAction = _SuggestionCallbackAction<AutocompleteNextOptionIntent>(
+        onInvoke: _highlightNextOption);
+    _hideOptionsAction =
+        _SuggestionCallbackAction<DismissIntent>(onInvoke: _hideOptions);
+    _actionMap = <Type, Action<Intent>>{
       AutocompletePreviousOptionIntent: _previousOptionAction,
       AutocompleteNextOptionIntent: _nextOptionAction,
       DismissIntent: _hideOptionsAction,
@@ -673,11 +699,11 @@ class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionFiel
               child: widget.fieldViewBuilder == null
                   ? const SizedBox.shrink()
                   : widget.fieldViewBuilder!(
-                context,
-                _textEditingController,
-                _focusNode,
-                _onFieldSubmitted,
-              ),
+                      context,
+                      _textEditingController,
+                      _focusNode,
+                      _onFieldSubmitted,
+                    ),
             ),
           ),
         ),

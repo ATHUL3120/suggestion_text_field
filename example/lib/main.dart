@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Customer? selectedCustomer;
-  FutureOr<List<Customer>> fetchCustomerData(String filterText)async{
+  FutureOr<List<Customer>> fetchCustomerData(String filterText) async {
     ///list fetch from async task or non async task
     final List<Customer> customers = List.generate(20, (index) {
       final random = Random();
@@ -41,10 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
       final mobile = '555-555-${random.nextInt(10000)}';
       return Customer(id: id, name: name, mobile: mobile);
     });
-    /// return data with filter
-    return customers.where((element) => element.name.toLowerCase().contains(filterText.toLowerCase())).toList();
 
+    /// return data with filter
+    return customers
+        .where((element) =>
+            element.name.toLowerCase().contains(filterText.toLowerCase()))
+        .toList();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,46 +61,45 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              TextButton(onPressed: () => setState(() {
-                selectedCustomer=null;
-              }), child: const Text('clear customer from out side')),
-
-              TextButton(onPressed: () => setState(() {
-                selectedCustomer=Customer(id: "100", name: "OutSide Customer", mobile: "555-555-5555");
-              }), child: const Text('set customer from out side')),
+              TextButton(
+                  onPressed: () => setState(() {
+                        selectedCustomer = null;
+                      }),
+                  child: const Text('clear customer from out side')),
+              TextButton(
+                  onPressed: () => setState(() {
+                        selectedCustomer = Customer(
+                            id: "100",
+                            name: "OutSide Customer",
+                            mobile: "555-555-5555");
+                      }),
+                  child: const Text('set customer from out side')),
               SuggestionTextField<Customer>(
                 value: selectedCustomer,
-                suggestionFetch: (textEditingValue) => fetchCustomerData(textEditingValue.text),
-                textFieldContent: TextFieldContent(
-                  label: 'Select Customer'
-                ),
+                suggestionFetch: (textEditingValue) =>
+                    fetchCustomerData(textEditingValue.text),
+                textFieldContent: TextFieldContent(label: 'Select Customer'),
                 displayStringForOption: (option) => option.name,
                 onSelected: (option) {
                   setState(() {
-                    selectedCustomer=option;
+                    selectedCustomer = option;
                   });
                 },
                 onClose: () {
                   setState(() {
-                    selectedCustomer=null;
+                    selectedCustomer = null;
                   });
                 },
               ),
-
-
-
-
             ],
           ),
         ),
       ),
-
     );
   }
 }
 
-
-class Customer{
+class Customer {
   final String id;
   final String name;
   final String mobile;
