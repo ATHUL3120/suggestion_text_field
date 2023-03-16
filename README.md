@@ -7,8 +7,8 @@ SuggestionTextField is a Flutter package that provides a text field with auto-su
 
 To use SuggestionTextField, add it to your dependencies in `pubspec.yaml`:
 ```dart
-dependencies:  
-  suggestion_text_field: ^1.0.5
+dependencies :  
+  suggestion_text_field : ^1.0.5
 ```
 
 ## Usage
