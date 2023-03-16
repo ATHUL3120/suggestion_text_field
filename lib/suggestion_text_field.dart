@@ -70,7 +70,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
         this.optionsMaxWidth = 300.0,
         this.itemBuilder,
         this.value,
-        this.autoCompleteField,
+        this.textFieldContent,
         this.readOnly = false,
         this.firstSuggestionFocus=true,
         this.onClose
@@ -92,7 +92,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   ///
   /// If not provided, will build a standard Material-style text field by
   /// default.
-  final TextFieldContent? autoCompleteField;
+  final TextFieldContent? textFieldContent;
   final AutocompleteOnSelected<T>? onSelected;
 
   /// list your content with filter
@@ -120,27 +120,27 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
           readOnly: readOnly,
           controller: textEditingController,
           onFieldSubmitted: (p0) {
-            if (autoCompleteField?.onFieldSubmitted != null) {
-              autoCompleteField?.onFieldSubmitted!(p0);
+            if (textFieldContent?.onFieldSubmitted != null) {
+              textFieldContent?.onFieldSubmitted!(p0);
             }
             onFieldSubmitted();
           },
           focusNode: focusNodes,
-          validator: autoCompleteField?.validator,
-          onEditingComplete: autoCompleteField?.onEditingComplete,
-          textInputAction: autoCompleteField?.textInputAction,
-          keyboardType: autoCompleteField?.keyboardType,
+          validator: textFieldContent?.validator,
+          onEditingComplete: textFieldContent?.onEditingComplete,
+          textInputAction: textFieldContent?.textInputAction,
+          keyboardType: textFieldContent?.keyboardType,
           onChanged: (value) {
-            if(autoCompleteField?.onChanged!=null){
-              autoCompleteField!.onChanged!(value);
+            if(textFieldContent?.onChanged!=null){
+              textFieldContent!.onChanged!(value);
             }
           },
-          onSaved: autoCompleteField?.onSaved,
-          maxLines: autoCompleteField?.maxLines ?? 1,
-          autovalidateMode: autoCompleteField?.autoValidateMode,
-          inputFormatters: autoCompleteField?.inputFormatters,
+          onSaved: textFieldContent?.onSaved,
+          maxLines: textFieldContent?.maxLines ?? 1,
+          autovalidateMode: textFieldContent?.autoValidateMode,
+          inputFormatters: textFieldContent?.inputFormatters,
           decoration: InputDecoration(
-              labelText: autoCompleteField?.label,
+              labelText: textFieldContent?.label,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: onClose!=null?InkWell(onTap:  onClose, child: const Icon(Icons.close,size: 20,),):null,
               isDense: true,
@@ -151,7 +151,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
         final d = await suggestionFetch(textEditingValue);
         return d;
       },
-      focusNode: autoCompleteField?.focusNode ?? focusNode,
+      focusNode: textFieldContent?.focusNode ?? focusNode,
       textEditingController: controller,
       optionsViewBuilder: (BuildContext context,
           AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
