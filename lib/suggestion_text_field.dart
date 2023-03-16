@@ -63,7 +63,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   /// );
   SuggestionTextField(
       {super.key,
-        required this.suggestions,
+        required this.suggestionFetch,
         this.displayStringForOption = RawSuggestionField.defaultStringForOption,
         this.onSelected,
         this.optionsMaxHeight = 200.0,
@@ -96,7 +96,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   final AutocompleteOnSelected<T>? onSelected;
 
   /// list your content with filter
-  final AutocompleteOptionsBuilder<T> suggestions;
+  final AutocompleteOptionsBuilder<T> suggestionFetch;
 
   final double optionsMaxHeight;
   final double optionsMaxWidth;
@@ -148,7 +148,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
         );
       },
       optionsBuilder: (textEditingValue) async{
-        final d = await suggestions(textEditingValue);
+        final d = await suggestionFetch(textEditingValue);
         return d;
       },
       focusNode: autoCompleteField?.focusNode ?? focusNode,
