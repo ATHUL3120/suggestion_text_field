@@ -1,4 +1,4 @@
-library suggestion_text_field;
+library suggestion_input_field;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
