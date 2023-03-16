@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
 
-class AutoCompleteField {
+class TextFieldContent {
   final bool isPrimarySelect = false;
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
@@ -20,7 +20,7 @@ class AutoCompleteField {
   final AutovalidateMode? autoValidateMode;
   final void Function(String)? onFieldSubmitted;
 
-  AutoCompleteField(
+  TextFieldContent(
       {this.onChanged,
         this.onSaved,
         this.focusNode,
@@ -35,7 +35,7 @@ class AutoCompleteField {
         this.onFieldSubmitted});
 }
 
-class CustAutocomplete<T extends Object> extends StatelessWidget {
+class SuggestionTextField<T extends Object> extends StatelessWidget {
   ///sample code:
   ///
   /// CustAutocomplete<ModelClass>(
@@ -61,10 +61,10 @@ class CustAutocomplete<T extends Object> extends StatelessWidget {
   ///     setState((){});
   ///   },
   /// );
-  CustAutocomplete(
+  SuggestionTextField(
       {super.key,
         required this.optionsBuilder,
-        this.displayStringForOption = CustRawAutocomplete.defaultStringForOption,
+        this.displayStringForOption = RawSuggestionField.defaultStringForOption,
         this.onSelected,
         this.optionsMaxHeight = 200.0,
         this.optionsMaxWidth = 300.0,
@@ -92,7 +92,7 @@ class CustAutocomplete<T extends Object> extends StatelessWidget {
   ///
   /// If not provided, will build a standard Material-style text field by
   /// default.
-  final AutoCompleteField? autoCompleteField;
+  final TextFieldContent? autoCompleteField;
   final AutocompleteOnSelected<T>? onSelected;
 
   /// list your content with filter
@@ -111,7 +111,7 @@ class CustAutocomplete<T extends Object> extends StatelessWidget {
         controller.text= displayStringForOption(value!);
       }
     });
-    return CustRawAutocomplete<T>(
+    return RawSuggestionField<T>(
       displayStringForOption: displayStringForOption,
       firstSuggestionFocus: firstSuggestionFocus,
       fieldViewBuilder:
@@ -142,7 +142,7 @@ class CustAutocomplete<T extends Object> extends StatelessWidget {
           decoration: InputDecoration(
               labelText: autoCompleteField?.label,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: onClose!=null?InkWell(onTap:  onClose, child: Icon(Icons.close,size: 20,),):null,
+              suffixIcon: onClose!=null?InkWell(onTap:  onClose, child: const Icon(Icons.close,size: 20,),):null,
               isDense: true,
               floatingLabelAlignment: FloatingLabelAlignment.start),
         );
@@ -155,7 +155,7 @@ class CustAutocomplete<T extends Object> extends StatelessWidget {
       textEditingController: controller,
       optionsViewBuilder: (BuildContext context,
           AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
-        return _AutocompleteOptions<T>(
+        return _Suggestions<T>(
           displayStringForOption: displayStringForOption,
           onSelected: onSelected,
           options: options,
@@ -169,8 +169,8 @@ class CustAutocomplete<T extends Object> extends StatelessWidget {
   }
 }
 
-class _AutocompleteOptions<T extends Object> extends StatelessWidget {
-  const _AutocompleteOptions({
+class _Suggestions<T extends Object> extends StatelessWidget {
+  const _Suggestions({
     super.key,
     required this.displayStringForOption,
     required this.onSelected,
@@ -233,12 +233,12 @@ class _AutocompleteOptions<T extends Object> extends StatelessWidget {
     );
   }
 }
-class CustRawAutocomplete<T extends Object> extends StatefulWidget {
+class RawSuggestionField<T extends Object> extends StatefulWidget {
   /// Create an instance of RawAutocomplete.
   ///
   /// [displayStringForOption], [optionsBuilder] and [optionsViewBuilder] must
   /// not be null.
-  const CustRawAutocomplete({
+  const RawSuggestionField({
     super.key,
     required this.optionsViewBuilder,
     required this.optionsBuilder,
@@ -301,7 +301,7 @@ class CustRawAutocomplete<T extends Object> extends StatefulWidget {
   ///
   /// The options are displayed floating below the field using a
   /// [CompositedTransformFollower] inside of an [Overlay], not at the same
-  /// place in the widget tree as [CustRawAutocomplete].
+  /// place in the widget tree as [RawSuggestionField].
   ///
   /// In order to track which item is highlighted by keyboard navigation, the
   /// resulting options will be wrapped in an inherited
@@ -370,7 +370,7 @@ class CustRawAutocomplete<T extends Object> extends StatefulWidget {
   ///  * [focusNode] and [textEditingController], which contain a code example
   ///    showing how to create a separate field outside of fieldViewBuilder.
   static void onFieldSubmitted<T extends Object>(GlobalKey key) {
-    final _CustRawAutocompleteState<T> rawAutocomplete = key.currentState! as _CustRawAutocompleteState<T>;
+    final _RawSuggestionFieldState<T> rawAutocomplete = key.currentState! as _RawSuggestionFieldState<T>;
     rawAutocomplete._onFieldSubmitted();
   }
 
@@ -383,18 +383,18 @@ class CustRawAutocomplete<T extends Object> extends StatefulWidget {
   }
 
   @override
-  State<CustRawAutocomplete<T>> createState() => _CustRawAutocompleteState<T>();
+  State<RawSuggestionField<T>> createState() => _RawSuggestionFieldState<T>();
 }
 
-class _CustRawAutocompleteState<T extends Object> extends State<CustRawAutocomplete<T>> {
+class _RawSuggestionFieldState<T extends Object> extends State<RawSuggestionField<T>> {
   final GlobalKey _fieldKey = GlobalKey();
   final LayerLink _optionsLayerLink = LayerLink();
   late TextEditingController _textEditingController;
   late FocusNode _focusNode;
   late final Map<Type, Action<Intent>> _actionMap;
-  late final _CustAutocompleteCallbackAction<AutocompletePreviousOptionIntent> _previousOptionAction;
-  late final _CustAutocompleteCallbackAction<AutocompleteNextOptionIntent> _nextOptionAction;
-  late final _CustAutocompleteCallbackAction<DismissIntent> _hideOptionsAction;
+  late final _SuggestionCallbackAction<AutocompletePreviousOptionIntent> _previousOptionAction;
+  late final _SuggestionCallbackAction<AutocompleteNextOptionIntent> _nextOptionAction;
+  late final _SuggestionCallbackAction<DismissIntent> _hideOptionsAction;
   Iterable<T> _options = Iterable<T>.empty();
   T? _selection;
   bool _userHidOptions = false;
@@ -589,7 +589,6 @@ class _CustRawAutocompleteState<T extends Object> extends State<CustRawAutocompl
       _textEditingController.removeListener(_onChangedField);
       _textEditingController = current;
     }
-    print("ndfigbjhfdbgjbdfjj;");
     _textEditingController.addListener(_onChangedField);
   }
 
@@ -621,9 +620,9 @@ class _CustRawAutocompleteState<T extends Object> extends State<CustRawAutocompl
     _textEditingController.addListener(_onChangedField);
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onChangedFocus);
-    _previousOptionAction = _CustAutocompleteCallbackAction<AutocompletePreviousOptionIntent>(onInvoke: _highlightPreviousOption);
-    _nextOptionAction = _CustAutocompleteCallbackAction<AutocompleteNextOptionIntent>(onInvoke: _highlightNextOption);
-    _hideOptionsAction = _CustAutocompleteCallbackAction<DismissIntent>(onInvoke: _hideOptions);
+    _previousOptionAction = _SuggestionCallbackAction<AutocompletePreviousOptionIntent>(onInvoke: _highlightPreviousOption);
+    _nextOptionAction = _SuggestionCallbackAction<AutocompleteNextOptionIntent>(onInvoke: _highlightNextOption);
+    _hideOptionsAction = _SuggestionCallbackAction<DismissIntent>(onInvoke: _hideOptions);
     _actionMap = <Type, Action<Intent>> {
       AutocompletePreviousOptionIntent: _previousOptionAction,
       AutocompleteNextOptionIntent: _nextOptionAction,
@@ -634,7 +633,7 @@ class _CustRawAutocompleteState<T extends Object> extends State<CustRawAutocompl
   }
 
   @override
-  void didUpdateWidget(CustRawAutocomplete<T> oldWidget) {
+  void didUpdateWidget(RawSuggestionField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateTextEditingController(
       oldWidget.textEditingController,
@@ -687,8 +686,8 @@ class _CustRawAutocompleteState<T extends Object> extends State<CustRawAutocompl
   }
 }
 
-class _CustAutocompleteCallbackAction<T extends Intent> extends CallbackAction<T> {
-  _CustAutocompleteCallbackAction({
+class _SuggestionCallbackAction<T extends Intent> extends CallbackAction<T> {
+  _SuggestionCallbackAction({
     required super.onInvoke,
     this.enabled = true,
   });
