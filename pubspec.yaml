@@ -1,8 +1,8 @@
-name: suggestion_text_field
+name: suggestion_input_field
 description: This is a suggestion text field
 version: 0.0.1
-homepage: https://github.com/ATHUL3120/suggestion_text_field
-repository: https://github.com/ATHUL3120/suggestion_text_field
+homepage: https://github.com/ChegzDev/suggestion_input_field
+repository: https://github.com/ChegzDev/suggestion_input_field
 
 environment:
   sdk: '>=2.19.4 <3.0.0'

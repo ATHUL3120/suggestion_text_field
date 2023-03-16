@@ -4,14 +4,14 @@ SuggestionTextField is a Flutter package that provides a text field with auto-su
 
 ## Installation
 
-To use this package, add `suggestion_text_field` as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages).
+To use this package, add `suggestion_input_field` as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages).
 
 ## Usage
 
 Simply import the package and use the `SuggestionTextField` widget in your Flutter app. Here is an example:
 
 ```dart
-import 'package:suggestion_text_field/suggestion_text_field.dart';
+import 'package:suggestion_input_field/suggestion_input_field.dart';
 
 List<MapEntry> list=[];
 
