@@ -78,7 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 value: selectedCustomer,
                 suggestionFetch: (textEditingValue) =>
                     fetchCustomerData(textEditingValue.text),
-                textFieldContent: TextFieldContent(label: 'Select Customer'),
+                textFieldContent: TextFieldContent(
+                  decoration: const InputDecoration(
+                    labelText: 'Select Customer',
+                  ),
+                ),
                 displayStringForOption: (option) => option.name,
                 onSelected: (option) {
                   setState(() {

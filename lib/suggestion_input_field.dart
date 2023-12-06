@@ -9,8 +9,7 @@ class TextFieldContent {
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
   final FocusNode? focusNode;
-  final String? label;
-  //final InputDecoration? decoration;
+  final InputDecoration? decoration;
   final void Function()? onEditingComplete;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputAction? textInputAction;
@@ -22,9 +21,9 @@ class TextFieldContent {
 
   TextFieldContent(
       {this.onChanged,
+      this.decoration,
       this.onSaved,
       this.focusNode,
-      this.label,
       this.onEditingComplete,
       this.inputFormatters,
       this.textInputAction,
@@ -35,7 +34,7 @@ class TextFieldContent {
       this.onFieldSubmitted});
 }
 
-class SuggestionTextField<T extends Object> extends StatelessWidget {
+class SuggestionTextField<T extends Object> extends StatefulWidget {
   ///sample code:
   ///
   /// CustAutocomplete<ModelClass>(
@@ -61,7 +60,7 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   ///     setState((){});
   ///   },
   /// );
-  SuggestionTextField(
+  const SuggestionTextField(
       {super.key,
       required this.suggestionFetch,
       this.displayStringForOption = RawSuggestionField.defaultStringForOption,
@@ -100,78 +99,111 @@ class SuggestionTextField<T extends Object> extends StatelessWidget {
   final double optionsMaxHeight;
   final double optionsMaxWidth;
 
+  @override
+  State<SuggestionTextField<T>> createState() => _SuggestionTextFieldState<T>();
+}
+
+class _SuggestionTextFieldState<T extends Object>
+    extends State<SuggestionTextField<T>> {
   /// {@macro flutter.widgets.RawAutocomplete.initialValue}
   final TextEditingController controller = TextEditingController();
+
   final FocusNode focusNode = FocusNode();
+  InputDecoration decoration = const InputDecoration();
+
   @override
-  Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (value != null) {
-        controller.text = displayStringForOption(value!);
-      }
-    });
-    return RawSuggestionField<T>(
-      displayStringForOption: displayStringForOption,
-      firstSuggestionFocus: firstSuggestionFocus,
-      fieldViewBuilder:
-          (context, textEditingController, focusNodes, onFieldSubmitted) {
-        return TextFormField(
-          readOnly: readOnly,
-          controller: textEditingController,
-          onFieldSubmitted: (p0) {
-            if (textFieldContent?.onFieldSubmitted != null) {
-              textFieldContent?.onFieldSubmitted!(p0);
-            }
-            onFieldSubmitted();
-          },
-          focusNode: focusNodes,
-          validator: textFieldContent?.validator,
-          onEditingComplete: textFieldContent?.onEditingComplete,
-          textInputAction: textFieldContent?.textInputAction,
-          keyboardType: textFieldContent?.keyboardType,
-          onChanged: (value) {
-            if (textFieldContent?.onChanged != null) {
-              textFieldContent!.onChanged!(value);
-            }
-          },
-          onSaved: textFieldContent?.onSaved,
-          maxLines: textFieldContent?.maxLines ?? 1,
-          autovalidateMode: textFieldContent?.autoValidateMode,
-          inputFormatters: textFieldContent?.inputFormatters,
-          decoration: InputDecoration(
-              labelText: textFieldContent?.label,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: onClose != null
+  void initState() {
+    super.initState();
+    decoration = widget.textFieldContent?.decoration?.copyWith(
+          labelText: widget.textFieldContent?.decoration?.labelText,
+          floatingLabelBehavior:
+              widget.textFieldContent?.decoration?.floatingLabelBehavior ??
+                  FloatingLabelBehavior.always,
+          suffixIcon: widget.textFieldContent?.decoration?.suffixIcon ??
+              (widget.onClose != null
                   ? InkWell(
-                      onTap: onClose,
+                      onTap: widget.onClose,
                       child: const Icon(
                         Icons.close,
                         size: 20,
                       ),
                     )
-                  : null,
-              isDense: true,
-              floatingLabelAlignment: FloatingLabelAlignment.start),
+                  : null),
+          isDense: widget.textFieldContent?.decoration?.isDense ?? true,
+          floatingLabelAlignment:
+              widget.textFieldContent?.decoration?.floatingLabelAlignment ??
+                  FloatingLabelAlignment.start,
+        ) ??
+        InputDecoration(
+          suffixIcon: (widget.onClose != null
+              ? InkWell(
+                  onTap: widget.onClose,
+                  child: const Icon(
+                    Icons.close,
+                    size: 20,
+                  ),
+                )
+              : null),
+          isDense: true,
+          floatingLabelAlignment: FloatingLabelAlignment.start,
         );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.value != null) {
+        controller.text = widget.displayStringForOption(widget.value!);
+      }
+    });
+    return RawSuggestionField<T>(
+      displayStringForOption: widget.displayStringForOption,
+      firstSuggestionFocus: widget.firstSuggestionFocus,
+      fieldViewBuilder:
+          (context, textEditingController, focusNodes, onFieldSubmitted) {
+        return TextFormField(
+            readOnly: widget.readOnly,
+            controller: textEditingController,
+            onFieldSubmitted: (p0) {
+              if (widget.textFieldContent?.onFieldSubmitted != null) {
+                widget.textFieldContent?.onFieldSubmitted!(p0);
+              }
+              onFieldSubmitted();
+            },
+            focusNode: focusNodes,
+            validator: widget.textFieldContent?.validator,
+            onEditingComplete: widget.textFieldContent?.onEditingComplete,
+            textInputAction: widget.textFieldContent?.textInputAction,
+            keyboardType: widget.textFieldContent?.keyboardType,
+            onChanged: (value) {
+              if (widget.textFieldContent?.onChanged != null) {
+                widget.textFieldContent!.onChanged!(value);
+              }
+            },
+            onSaved: widget.textFieldContent?.onSaved,
+            maxLines: widget.textFieldContent?.maxLines ?? 1,
+            autovalidateMode: widget.textFieldContent?.autoValidateMode,
+            inputFormatters: widget.textFieldContent?.inputFormatters,
+            decoration: decoration);
       },
       optionsBuilder: (textEditingValue) async {
-        final d = await suggestionFetch(textEditingValue);
+        final d = await widget.suggestionFetch(textEditingValue);
         return d;
       },
-      focusNode: textFieldContent?.focusNode ?? focusNode,
+      focusNode: widget.textFieldContent?.focusNode ?? focusNode,
       textEditingController: controller,
       optionsViewBuilder: (BuildContext context,
           AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
         return _Suggestions<T>(
-          displayStringForOption: displayStringForOption,
+          displayStringForOption: widget.displayStringForOption,
           onSelected: onSelected,
           options: options,
-          maxWidth: optionsMaxWidth,
-          maxOptionsHeight: optionsMaxHeight,
-          itemBuilder: itemBuilder,
+          maxWidth: widget.optionsMaxWidth,
+          maxOptionsHeight: widget.optionsMaxHeight,
+          itemBuilder: widget.itemBuilder,
         );
       },
-      onSelected: onSelected,
+      onSelected: widget.onSelected,
     );
   }
 }
@@ -186,6 +218,7 @@ class _Suggestions<T extends Object> extends StatelessWidget {
     this.itemBuilder,
     this.maxWidth,
   });
+
   final Widget Function(T item)? itemBuilder;
   final AutocompleteOptionToString<T> displayStringForOption;
   final double? maxWidth;
@@ -551,6 +584,7 @@ class _RawSuggestionFieldState<T extends Object>
   }
 
   bool _floatingOptionsUpdateScheduled = false;
+
   // Hide or show the options overlay, if needed.
   void _updateOverlay() {
     if (SchedulerBinding.instance.schedulerPhase ==
